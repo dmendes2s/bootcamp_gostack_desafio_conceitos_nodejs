@@ -28,10 +28,6 @@ app.post("/repositories", (request, response) => {
     
     const repositorie = { id: uuid(), title, url, techs, likes: 0 }
 
-    if(!title || !url || !techs){
-        return response.status(400).json({error});
-    }
-
     repositories.push(repositorie);
 
     return response.json(repositorie);
