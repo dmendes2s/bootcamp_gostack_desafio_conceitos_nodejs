@@ -47,6 +47,10 @@ app.post("/repositories/:id/like", (request, response) => {
 
     const repoIndex = findIndexRepositorie(id);
 
+    if(repoIndex === -1){
+        return response.status(400).json({error: "Repositorie not found"});
+    }
+
     const repo = repositories[repoIndex];
 
     repositories[repoIndex] = { ...repo, likes: repo.likes + 1 }
@@ -64,32 +68,34 @@ app.put("/repositories/:id", (request, response) => {
         return response.status(400).json({error: "Invalid repositorie id"});
     }
 
-    if(!title){
-        return response.status(400).json({error});
-    }
-
     const repoIndex = findIndexRepositorie(id);
+
+    if(repoIndex === -1){
+        return response.status(400).json({error: "Repositorie not found"});
+    }
 
     const repo = repositories[repoIndex];
 
-    repositories[repoIndex] = { ...repo, title  }
+    newRepo = { ...repo, title, url, techs  };
 
-    return response.send();
+    repositories[repoIndex] = newRepo
+
+    return response.json(newRepo);
 });
 
 app.delete("/repositories/:id", (request, response) => {
 
     const { id } = request.params;
 
-    if(!isRepoId(id)){
-        return response.status(400).json({error: "Invalid repositorie id"});
-    }
-
     const repoIndex = findIndexRepositorie(id);
+
+    if(repoIndex === -1){
+        return response.status(400).json({error: "Repositorie not found"});
+    }
 
     repositories.splice(repoIndex,1);
 
-    return response.status(204);
+    return response.status(204).send();
 });
 
 module.exports = app;
